@@ -12,16 +12,16 @@ class NewsRepositoryImpl(
     private val coroutineContextProvider: CoroutineContextProvider
 ) : NewsRepository, BaseRepository() {
 
-    override suspend fun getTopHeadlines(): ResultWrapper<NewsResult> {
+    override suspend fun fetchTopHeadlineNews(page: Int, pageSize: Int): ResultWrapper<NewsResult> {
         return safeApiCall(coroutineContextProvider.io) {
-             api.fetchTopHeadlineNews().toDomain()
+            api.fetchTopHeadlineNews(page = page, pageSize = pageSize).toDomain()
         }
     }
 
-    override suspend fun getAllNews(): ResultWrapper<NewsResult> {
+    override suspend fun fetchAllNews(page: Int, pageSize: Int): ResultWrapper<NewsResult> {
         return safeApiCall(coroutineContextProvider.io) {
-            api.fetchAllNews().toDomain()
+            api.fetchAllNews(page = page, pageSize = pageSize).toDomain()
         }
     }
-    
+
 }

@@ -3,8 +3,8 @@ package com.example.newsapp.ui.news.adapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.newsapp.ui.news.NewsEverythingFragment
-import com.example.newsapp.ui.news.NewsTopHeadlinesFragment
+import com.example.newsapp.ui.news.AllNewsFragment
+import com.example.newsapp.ui.news.TopNewsFragment
 
 class NewsPagerAdapter(
     fragmentActivity: FragmentActivity
@@ -22,8 +22,8 @@ class NewsPagerAdapter(
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            TOP_HEADLINES_TAB -> NewsTopHeadlinesFragment()
-            EVERYTHING_TAB -> NewsEverythingFragment()
+            TOP_HEADLINES_TAB -> TopNewsFragment()
+            EVERYTHING_TAB -> AllNewsFragment()
             else -> throw IllegalStateException("Invalid adapter position")
         }
     }

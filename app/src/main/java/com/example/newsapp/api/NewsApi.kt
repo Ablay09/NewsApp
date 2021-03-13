@@ -8,11 +8,15 @@ interface NewsApi {
 
     @GET("v2/top-headlines")
     suspend fun fetchTopHeadlineNews(
-        @Query("q") query: String = "trump"
+        @Query("q", encoded = true) query: String = "a",
+        @Query("page") page: Int,
+        @Query("pageSize") pageSize: Int
     ): NewsResponseDTO
 
     @GET("v2/everything")
     suspend fun fetchAllNews(
-        @Query("q") query: String = "trump"
+        @Query("q", encoded = true) query: String = "a",
+        @Query("page") page: Int,
+        @Query("pageSize") pageSize: Int
     ): NewsResponseDTO
 }
