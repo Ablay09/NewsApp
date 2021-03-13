@@ -10,4 +10,9 @@ interface NewsApi {
     suspend fun fetchTopHeadlineNews(
         @Query("q") query: String = "trump"
     ): NewsResponseDTO
+
+    @GET("v2/everything")
+    suspend fun fetchAllNews(
+        @Query("q") query: String = "trump"
+    ): NewsResponseDTO
 }
