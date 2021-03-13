@@ -17,16 +17,32 @@ class NewsViewModel(
     val topHeadlinesLiveData: LiveData<Result<List<Article>>>
         get() = _topHeadlinesLiveData
 
+    private val _allNewsLiveData = MutableLiveData<Result<List<Article>>>()
+    val allNewsLiveData: LiveData<Result<List<Article>>>
+        get() = _allNewsLiveData
+
     fun fetchTopHeadlineNews() {
         viewModelScope.launch {
             val newsResponse = newsRepository.getTopHeadlines()
             when (newsResponse) {
-                is ResultWrapper.Error -> {
+                is ResultWrapper.Error ->
                     _topHeadlinesLiveData.value = Result.failure(newsResponse.exception)
-                }
-                is ResultWrapper.Success -> {
+
+                is ResultWrapper.Success ->
                     _topHeadlinesLiveData.value = Result.success(newsResponse.data.articles)
-                }
+
+            }
+        }
+    }
+
+    fun fetchAllNews() {
+        viewModelScope.launch {
+            val newsResponse = newsRepository.getAllNews()
+            when (newsResponse) {
+                is ResultWrapper.Error ->
+                    _allNewsLiveData.value = Result.failure(newsResponse.exception)
+                is ResultWrapper.Success ->
+                    _allNewsLiveData.value = Result.success(newsResponse.data.articles)
             }
         }
     }

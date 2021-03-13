@@ -17,5 +17,11 @@ class NewsRepositoryImpl(
              api.fetchTopHeadlineNews().toDomain()
         }
     }
+
+    override suspend fun getAllNews(): ResultWrapper<NewsResult> {
+        return safeApiCall(coroutineContextProvider.io) {
+            api.fetchAllNews().toDomain()
+        }
+    }
     
 }
