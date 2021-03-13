@@ -1,49 +1,36 @@
 package com.example.newsapp.ui.news
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.newsapp.core.ResultWrapper
+import androidx.lifecycle.switchMap
+import androidx.paging.PagedList
+import androidx.paging.toLiveData
+import com.example.newsapp.data.paging.AllNewsDataSourceFactory
+import com.example.newsapp.data.paging.PagingDataSource
+import com.example.newsapp.data.paging.PagingState
+import com.example.newsapp.data.paging.TopNewsDataSourceFactory
 import com.example.newsapp.domain.news.Article
 import com.example.newsapp.domain.repository.NewsRepository
-import kotlinx.coroutines.launch
 
-class NewsViewModel(
-    private val newsRepository: NewsRepository
-) : ViewModel() {
+class NewsViewModel(newsRepository: NewsRepository) : ViewModel() {
 
-    private val _topHeadlinesLiveData = MutableLiveData<Result<List<Article>>>()
-    val topHeadlinesLiveData: LiveData<Result<List<Article>>>
-        get() = _topHeadlinesLiveData
-
-    private val _allNewsLiveData = MutableLiveData<Result<List<Article>>>()
-    val allNewsLiveData: LiveData<Result<List<Article>>>
-        get() = _allNewsLiveData
-
-    fun fetchTopHeadlineNews() {
-        viewModelScope.launch {
-            val newsResponse = newsRepository.getTopHeadlines()
-            when (newsResponse) {
-                is ResultWrapper.Error ->
-                    _topHeadlinesLiveData.value = Result.failure(newsResponse.exception)
-
-                is ResultWrapper.Success ->
-                    _topHeadlinesLiveData.value = Result.success(newsResponse.data.articles)
-
-            }
+    private val topNewsDataSourceFactory = TopNewsDataSourceFactory(newsRepository)
+    val topNewsPagingState: LiveData<PagingState> =
+        topNewsDataSourceFactory.sourceLiveData.switchMap {
+            it.pagingState
         }
-    }
+    val topHeadlinesLiveData: LiveData<PagedList<Article>> =
+        topNewsDataSourceFactory.toLiveData(PagingDataSource.config)
 
-    fun fetchAllNews() {
-        viewModelScope.launch {
-            val newsResponse = newsRepository.getAllNews()
-            when (newsResponse) {
-                is ResultWrapper.Error ->
-                    _allNewsLiveData.value = Result.failure(newsResponse.exception)
-                is ResultWrapper.Success ->
-                    _allNewsLiveData.value = Result.success(newsResponse.data.articles)
-            }
-        }
+    private val allNewsDataSourceFactory = AllNewsDataSourceFactory(newsRepository)
+    val allNewsPagingState = allNewsDataSourceFactory.sourceLiveData.switchMap {
+        it.pagingState
     }
+    val allNewsLiveData: LiveData<PagedList<Article>> =
+        allNewsDataSourceFactory.toLiveData(PagingDataSource.config)
+
+
+    fun fetchTopHeadlineNews() = topHeadlinesLiveData
+
+    fun fetchAllNews() = allNewsLiveData
 }

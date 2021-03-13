@@ -3,16 +3,15 @@ package com.example.newsapp.ui.news.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newsapp.R
 import com.example.newsapp.core.extensions.load
 import com.example.newsapp.domain.news.Article
 import kotlinx.android.synthetic.main.item_news.view.*
 
-
-class NewsListAdapter : ListAdapter<Article, NewsListAdapter.NewsItemViewHolder>(ArticleDiffUtilCallback()) {
+class NewsListAdapter : PagedListAdapter<Article, NewsListAdapter.NewsItemViewHolder>(ArticleDiffUtilCallback()) {
 
     inner class NewsItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(article: Article, payloads: List<Any> = emptyList()) {
@@ -31,14 +30,14 @@ class NewsListAdapter : ListAdapter<Article, NewsListAdapter.NewsItemViewHolder>
         position: Int,
         payloads: MutableList<Any>
     ) {
-        holder.bind(getItem(position), payloads.filterNotNull())
+        getItem(position)?.let { holder.bind(it, payloads.filterNotNull()) }
     }
 
     override fun onBindViewHolder(
         holder: NewsItemViewHolder,
         position: Int
     ) {
-        holder.bind(getItem(position))
+        getItem(position)?.let { holder.bind(it) }
     }
 
 }
