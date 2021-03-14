@@ -4,5 +4,6 @@
 
     <string name="news_top_headlines">Top Headlines</string>
     <string name="news_everything">Everything</string>
+    <string name="details">Details</string>
 
 </resources>

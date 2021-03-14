@@ -16,4 +16,8 @@ class TopNewsDataSourceFactory(
         sourceLiveData.postValue(newSource)
         return newSource
     }
+
+    fun refresh() {
+        sourceLiveData.value?.invalidate()
+    }
 }

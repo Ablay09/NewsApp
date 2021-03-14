@@ -3,6 +3,10 @@ package com.example.newsapp.data
 import com.example.newsapp.domain.news.Article
 import com.example.newsapp.domain.news.ArticleSource
 import com.example.newsapp.domain.news.NewsResult
+import java.text.SimpleDateFormat
+import java.util.*
+
+private const val ISO_8604_FORMAT_WITH_TIMEZONE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
 
 object NewsMapper {
 
@@ -26,7 +30,7 @@ object NewsMapper {
             description = description,
             url = url,
             urlToImage = urlToImage,
-            publishedAt = publishedAt,
+            publishedAt = publishedAt.toFormattedString(),
             content = content
         )
     }
@@ -36,5 +40,10 @@ object NewsMapper {
             id = id,
             name = name
         )
+    }
+
+    private fun Date.toFormattedString(): String {
+        val dateFormat = SimpleDateFormat("dd.MM.yyyy")
+        return dateFormat.format(this)
     }
 }

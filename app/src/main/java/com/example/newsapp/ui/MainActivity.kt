@@ -22,11 +22,11 @@ class MainActivity : AppCompatActivity() {
         transaction.commit()
     }
 
-    fun addFragment(fragment: Fragment, tag: String? = null) {
+    fun addFragment(fragment: Fragment, addToBackStack: Boolean = true) {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.add(R.id.fragment_container, fragment)
-        if (!tag.isNullOrEmpty()) {
-            transaction.addToBackStack(tag)
+        if (addToBackStack) {
+            transaction.addToBackStack(fragment::class.simpleName)
         }
         transaction.commit()
     }
