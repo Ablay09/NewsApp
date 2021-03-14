@@ -1,6 +1,7 @@
 package com.example.newsapp.ui.news
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,14 +12,16 @@ import com.example.newsapp.core.extensions.getErrorMessage
 import com.example.newsapp.core.extensions.showToast
 import com.example.newsapp.data.paging.PagingState
 import com.example.newsapp.domain.news.Article
+import com.example.newsapp.ui.MainActivity
 import com.example.newsapp.ui.news.adapter.NewsListAdapter
+import com.example.newsapp.ui.news.details.NewsDetailsFragment
 import kotlinx.android.synthetic.main.fragment_all_news.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class AllNewsFragment : Fragment() {
     private val viewModel: NewsViewModel by viewModel()
     private val adapter: NewsListAdapter by lazy {
-        NewsListAdapter()
+        NewsListAdapter(::handleNewsItemClicked)
     }
 
     override fun onCreateView(
@@ -39,6 +42,7 @@ class AllNewsFragment : Fragment() {
 
     private fun initRecyclerView() {
         rvAllNews.adapter = adapter
+        rvAllNews.setHasFixedSize(true)
     }
 
     private fun observeViewModel() {
@@ -48,6 +52,8 @@ class AllNewsFragment : Fragment() {
 
     private fun handleNewsResult(result: PagedList<Article>) {
         adapter.submitList(result)
+        Log.d("AllNewsFragment::", "currentList: ${adapter.currentList}")
+        Log.d("AllNewsFragment::", "currentList size: ${adapter.currentList?.size}")
     }
 
     private fun handlePagingState(state: PagingState) {
@@ -62,8 +68,15 @@ class AllNewsFragment : Fragment() {
 
     private fun setListeners() {
         swipeRefresh.setOnRefreshListener {
-            viewModel.allNewsLiveData.value?.dataSource?.invalidate()
+            viewModel.onRefreshAllNews()
         }
+    }
+
+    private fun handleNewsItemClicked(article: Article) {
+        val fragment = NewsDetailsFragment().apply {
+            arguments = NewsDetailsFragment.bundle(article)
+        }
+        (requireActivity() as MainActivity).addFragment(fragment)
     }
 
     private fun showToastMessage(message: String) {

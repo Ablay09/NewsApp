@@ -11,12 +11,16 @@ import com.example.newsapp.core.extensions.load
 import com.example.newsapp.domain.news.Article
 import kotlinx.android.synthetic.main.item_news.view.*
 
-class NewsListAdapter : PagedListAdapter<Article, NewsListAdapter.NewsItemViewHolder>(ArticleDiffUtilCallback()) {
+class NewsListAdapter(
+    private val onItemClicked: (Article) -> Unit
+) : PagedListAdapter<Article, NewsListAdapter.NewsItemViewHolder>(ArticleDiffUtilCallback()) {
 
     inner class NewsItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(article: Article, payloads: List<Any> = emptyList()) {
             itemView.tvNewsTitle.text = article.title
             itemView.ivNews.load(article.urlToImage)
+            itemView.tvSourceTitle.text = article.source.name
+            itemView.tvPublishedDate.text = article.publishedAt
         }
     }
 
@@ -30,14 +34,24 @@ class NewsListAdapter : PagedListAdapter<Article, NewsListAdapter.NewsItemViewHo
         position: Int,
         payloads: MutableList<Any>
     ) {
-        getItem(position)?.let { holder.bind(it, payloads.filterNotNull()) }
+        getItem(position)?.let { article ->
+            holder.bind(article, payloads.filterNotNull())
+            holder.itemView.setOnClickListener {
+                onItemClicked.invoke(article)
+            }
+        }
     }
 
     override fun onBindViewHolder(
         holder: NewsItemViewHolder,
         position: Int
     ) {
-        getItem(position)?.let { holder.bind(it) }
+        getItem(position)?.let { article ->
+            holder.bind(article)
+            holder.itemView.setOnClickListener {
+                onItemClicked.invoke(article)
+            }
+        }
     }
 
 }

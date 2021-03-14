@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import com.example.newsapp.domain.news.Article
 import com.example.newsapp.domain.repository.NewsRepository
+import kotlinx.coroutines.CoroutineScope
 
 class AllNewsDataSourceFactory(
     private val repository: NewsRepository
@@ -15,5 +16,9 @@ class AllNewsDataSourceFactory(
         val newSource = AllNewsDataSource(repository)
         sourceLiveData.postValue(newSource)
         return newSource
+    }
+
+    fun refresh() {
+        sourceLiveData.value?.invalidate()
     }
 }

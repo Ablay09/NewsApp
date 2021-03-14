@@ -9,24 +9,23 @@ import com.example.newsapp.data.paging.PagingDataSource.FIRST_PAGE
 import com.example.newsapp.domain.news.Article
 import com.example.newsapp.domain.news.NewsResult
 import com.example.newsapp.domain.repository.NewsRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
 class AllNewsDataSource(private val repository: NewsRepository) :
-    PageKeyedDataSource<Int, Article>(), CoroutineScope {
+    PageKeyedDataSource<Int, Article>()/*, CoroutineScope*/ {
 
     private val _pagingState = MutableLiveData<PagingState>()
     val pagingState: LiveData<PagingState>
         get() = _pagingState
 
+    private val scope = CoroutineScope(Dispatchers.IO + Job())
+
     override fun loadInitial(
         params: LoadInitialParams<Int>,
         callback: LoadInitialCallback<Int, Article>
     ) {
-        launch {
+        scope.launch {
             val response: ResultWrapper<NewsResult> = repository.fetchAllNews(
                 page = FIRST_PAGE,
                 pageSize = PAGE_SIZE
@@ -51,7 +50,7 @@ class AllNewsDataSource(private val repository: NewsRepository) :
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Article>) {
         val page = params.key
         _pagingState.postValue(PagingState.Loading)
-        launch {
+        scope.launch {
             val response = repository.fetchAllNews(page = page, pageSize = PAGE_SIZE)
             when (response) {
                 is ResultWrapper.Success -> {
@@ -78,10 +77,10 @@ class AllNewsDataSource(private val repository: NewsRepository) :
     }
 
     override fun invalidate() {
-        this.cancel()
         super.invalidate()
+        scope.cancel()
     }
-
+/*
     override val coroutineContext: CoroutineContext
-        get() = Job()
+        get() = Job()*/
 }
