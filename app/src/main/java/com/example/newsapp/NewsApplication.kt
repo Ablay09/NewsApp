@@ -1,9 +1,10 @@
 package com.example.newsapp
 
 import android.app.Application
-import com.example.newsapp.di.NetworkModule
-import com.example.newsapp.di.NewsModule
+import com.example.newsapp.di.networkModule
+import com.example.newsapp.di.newsModule
 import com.example.newsapp.di.appModule
+import com.example.newsapp.di.databaseModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -17,9 +18,10 @@ class NewsApplication : Application() {
             androidLogger()
             modules(
                 listOf(
-                    NetworkModule,
-                    NewsModule,
-                    appModule
+                    networkModule,
+                    newsModule,
+                    appModule,
+                    databaseModule
                 )
             )
 

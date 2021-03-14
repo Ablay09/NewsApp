@@ -12,7 +12,7 @@ import com.example.newsapp.core.extensions.showToast
 import com.example.newsapp.data.paging.PagingState
 import com.example.newsapp.domain.news.Article
 import com.example.newsapp.ui.MainActivity
-import com.example.newsapp.ui.news.adapter.NewsListAdapter
+import com.example.newsapp.ui.news.adapter.NewsPagedListAdapter
 import com.example.newsapp.ui.news.details.NewsDetailsFragment
 import kotlinx.android.synthetic.main.fragment_top_news.*
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -20,8 +20,8 @@ import org.koin.android.viewmodel.ext.android.viewModel
 class TopNewsFragment : Fragment() {
 
     private val viewModel: NewsViewModel by viewModel()
-    private val adapter: NewsListAdapter by lazy {
-        NewsListAdapter(::handleNewsItemClicked)
+    private val adapter: NewsPagedListAdapter by lazy {
+        NewsPagedListAdapter(::handleNewsItemClicked)
     }
 
     override fun onCreateView(
