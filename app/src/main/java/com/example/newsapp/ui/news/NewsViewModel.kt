@@ -27,7 +27,7 @@ class NewsViewModel(
         private const val DELAY_TIME = 5000L
     }
 
-    private var job: Job? = null
+//    private var job: Job? = null
 
     private val _selectedArticle = MutableLiveData<Article>()
     val selectedArticle: LiveData<Article>
@@ -61,19 +61,21 @@ class NewsViewModel(
         allNewsDataSourceFactory.refresh()
     }
 
-    fun startUpdates() {
+    /*fun startUpdates() {
         job = viewModelScope.launch {
             while (true) {
                 topNewsDataSourceFactory.refresh()
                 delay(DELAY_TIME)
             }
         }
-    }
+    }*/
 
+/*
     fun stopUpdates() {
         job?.cancel()
         job = null
     }
+*/
 
     fun checkIfFavorite(article: Article) {
         viewModelScope.launch {
@@ -106,7 +108,7 @@ class NewsViewModel(
     }
 
     override fun onCleared() {
-        job?.cancel()
+//        job?.cancel()
         super.onCleared()
     }
 
