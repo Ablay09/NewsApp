@@ -34,7 +34,7 @@ class TopNewsFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.startUpdates()
+//        viewModel.startUpdates()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -77,6 +77,6 @@ class TopNewsFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        viewModel.stopUpdates()
+//        viewModel.stopUpdates()
     }
 }
